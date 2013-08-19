@@ -102,14 +102,10 @@
      ],
      'include_dirs': [
        'src',
-         'deps/cares/include',
-         'deps/cares/src'
      ],
      'direct_dependent_settings': {
        'include_dirs': [
          'src',
-         'deps/cares/include',
-         'deps/cares/src'
        ]
      },
      'rules': [
@@ -147,8 +143,8 @@
       'conditions': [
         ['OS == "win"', {
           'libraries': [
-            '-lGdi32.lib',
-            '-lUser32.lib'
+            '-lgdi32.lib',
+            '-luser32.lib'
           ],
         }],
         ['OS == "linux"', {
