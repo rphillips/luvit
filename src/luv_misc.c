@@ -213,7 +213,7 @@ int luv_activate_signal_handler(lua_State* L) {
 
 
 int luv_run(lua_State* L) {
-  uv_run(luv_get_loop(L));
+  uv_run(luv_get_loop(L), UV_RUN_DEFAULT);
   return 0;
 }
 

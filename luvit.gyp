@@ -8,7 +8,8 @@
        'deps/luajit.gyp:libluajit',
        'deps/yajl.gyp:yajl',
        'deps/yajl.gyp:copy_headers',
-       'deps/uv/uv.gyp:uv',
+       'deps/cares/cares.gyp:cares',
+       'deps/uv/uv.gyp:libuv',
        'deps/zlib/zlib.gyp:zlib',
        'deps/luacrypto.gyp:luacrypto',
      ],
@@ -17,7 +18,8 @@
        'deps/luajit.gyp:luajit',
        'deps/luajit.gyp:libluajit',
        'deps/yajl.gyp:yajl',
-       'deps/uv/uv.gyp:uv',
+       'deps/cares/cares.gyp:cares',
+       'deps/uv/uv.gyp:libuv',
        'deps/luacrypto.gyp:luacrypto',
       ],
       'conditions': [
@@ -96,15 +98,18 @@
        'LUAJIT_VERSION="<!(git --git-dir deps/luajit/.git describe --tags)"',
        'YAJL_VERSIONISH="<!(git --git-dir deps/yajl/.git describe --tags)"',
        'BUNDLE=1',
+       'CARES_STATICLIB'
      ],
      'include_dirs': [
        'src',
-       'deps/uv/src/ares'
+         'deps/cares/include',
+         'deps/cares/src'
      ],
      'direct_dependent_settings': {
        'include_dirs': [
          'src',
-         'deps/uv/src/ares'
+         'deps/cares/include',
+         'deps/cares/src'
        ]
      },
      'rules': [
@@ -140,6 +145,12 @@
         },
       },
       'conditions': [
+        ['OS == "win"', {
+          'libraries': [
+            '-lGdi32.lib',
+            '-lUser32.lib'
+          ],
+        }],
         ['OS == "linux"', {
           'libraries': ['-ldl'],
         }],
