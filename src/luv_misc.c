@@ -31,7 +31,7 @@
 #define MAX_TITLE_LENGTH (8192)
 #endif
 
-#ifndef _WIN32
+#if 0 && !defined(_WIN32)
 
 const char *luv_signo_string(int signo) {
 #define SIGNO_CASE(e)  case e: return #e;
@@ -200,7 +200,7 @@ static void luv_on_signal(struct ev_loop *loop, struct ev_signal *w, int revents
 #endif
 
 int luv_activate_signal_handler(lua_State* L) {
-#ifndef _WIN32
+#if 0 && !defined(_WIN32)
   int signal = luaL_checkint(L, 1);
   struct ev_signal* signal_watcher = (struct ev_signal*)malloc(sizeof(struct ev_signal));
   signal_watcher->data = L;

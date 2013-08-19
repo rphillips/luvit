@@ -19,7 +19,6 @@
 #include "uv.h"
 #include <stdlib.h>
 #include <string.h>
-//#include "uv-private/ev.h"
 
 #include "luv_fs.h"
 #include "luv_dns.h"
