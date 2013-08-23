@@ -270,6 +270,25 @@ end
 
 --------------------------------------------------------------------------------
 
+local Signal = Handle:extend()
+uv.Signal = Signal
+
+function Signal:initialize()
+  self.userdata = native.newSignal()
+  self._active = false
+end
+
+function Signal:start(signum, callback)
+  native.signalStart(self.userdata, signum, callback)
+end
+
+function Signal:stop()
+  native.signalStop(self.userdata)
+end
+
+
+--------------------------------------------------------------------------------
+
 
 local Timer = Handle:extend()
 uv.Timer = Timer

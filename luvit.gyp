@@ -56,6 +56,7 @@
        'src/luv_misc.c',
        'src/luv_pipe.c',
        'src/luv_process.c',
+       'src/luv_signal.c',
        'src/luv_stream.c',
        'src/luv_tcp.c',
        'src/luv_timer.c',

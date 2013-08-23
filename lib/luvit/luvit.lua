@@ -116,21 +116,6 @@ function process.exit(exit_code)
   exitProcess(exit_code or 0)
 end
 
-function process:addHandlerType(name)
-  local code = constants[name]
-  if code then
-    native.activateSignalHandler(code)
-  end
-end
-
-function process:missingHandlerType(name, ...)
-  if name == "error" then
-    error(...)
-  elseif name == "SIGINT" or name == "SIGTERM" then
-    process.exit()
-  end
-end
-
 function process.nextTick(callback)
   timer.setTimeout(0, callback)
 end
