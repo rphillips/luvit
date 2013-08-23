@@ -160,15 +160,6 @@ OS_BINDING.date = OLD_OS.date
 OS_BINDING.time = OLD_OS.time
 OS_BINDING.clock = OLD_OS.clock
 
-
--- Ignore sigpipe and exit cleanly on SIGINT and SIGTERM
--- These shouldn't hold open the event loop
-if OS_BINDING.type() ~= "win32" then
-  native.activateSignalHandler(constants.SIGPIPE)
-  native.activateSignalHandler(constants.SIGINT)
-  native.activateSignalHandler(constants.SIGTERM)
-end
-
 local traceback = require('debug').traceback
 
 -- This is called by all the event sources from C

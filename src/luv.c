@@ -178,7 +178,6 @@ static const luaL_reg luv_f[] = {
   {"getProcessTitle", luv_get_process_title},
   {"setProcessTitle", luv_set_process_title},
   {"handleType", luv_handle_type},
-  {"activateSignalHandler", luv_activate_signal_handler},
   {NULL, NULL}
 };
 
