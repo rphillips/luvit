@@ -18,21 +18,25 @@ limitations under the License.
 
 -- Bootstrap require system
 local native = require('uv_native')
-process = {
-  execPath = native.execpath(),
-  cwd = getcwd,
-  argv = argv
-}
-_G.getcwd = nil
-_G.argv = nil
-require = require('module').require
 
 local Emitter = require('core').Emitter
+
+local Process = Emitter:extend()
+process = Process:new()
+process.execPath = native.execpath()
+process.cwd = getcwd
+process.argv = argv
+
+require = require('module').require
 local timer = require('timer')
 local env = require('env')
 local constants = require('constants')
 local uv = require('uv')
 local utils = require('utils')
+
+_G.getcwd = nil
+_G.argv = nil
+_G.process = process
 
 setmetatable(process, {
   __index = function (table, key)
@@ -63,6 +67,30 @@ setmetatable(process, {
     end
   end
 })
+
+--
+process.signalWraps = {}
+process.on = function(_type, listener)
+  if type(_type) ~= 'number' then
+    error('signal must be a number')
+  end
+  local signal = uv.Signal:new()
+  signal:start(_type, function()
+    listener(_type)
+  end)
+  process.signalWraps[_type] = signal
+end
+
+process.removeListener = function(_type)
+  if type(_type) ~= 'number' then
+    error('signal must be a number')
+  end
+  local signal = process.signalWraps[_type]
+  if signal then
+    signal:stop()
+    process.signalWraps[_type] = nil
+  end
+end
 
 -- Replace lua's stdio with luvit's
 -- leave stderr using lua's blocking implementation
