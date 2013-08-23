@@ -277,8 +277,10 @@ function Signal:initialize()
   self.userdata = native.newSignal()
 end
 
-function Signal:start(signum, callback)
-  native.signalStart(self.userdata, signum, callback)
+function Signal:start(signum)
+  native.signalStart(self.userdata, signum, function()
+    self:emit('signal', signum)
+  end)
 end
 
 function Signal:stop()

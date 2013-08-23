@@ -74,11 +74,13 @@ process.on = function(_type, listener)
   if type(_type) ~= 'number' then
     error('signal must be a number')
   end
-  local signal = uv.Signal:new()
-  signal:start(_type, function()
-    listener(_type)
-  end)
-  process.signalWraps[_type] = signal
+  local signal = process.signalWraps[_type]
+  if not signal then
+    signal = uv.Signal:new()
+    process.signalWraps[_type] = signal
+  end
+  signal:on('signal', listener)
+  signal:start(_type)
 end
 
 process.removeListener = function(_type)
