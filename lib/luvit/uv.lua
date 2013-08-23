@@ -275,7 +275,6 @@ uv.Signal = Signal
 
 function Signal:initialize()
   self.userdata = native.newSignal()
-  self._active = false
 end
 
 function Signal:start(signum, callback)
