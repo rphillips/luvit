@@ -68,19 +68,98 @@ setmetatable(process, {
   end
 })
 
+function signalStringToNumber(name)
+  if name == 'SIGHUP' then
+    return constants.SIGHUP
+  elseif name == 'SIGINT' then
+    return constants.SIGINT
+  elseif name == 'SIGQUIT' then
+    return constants.SIGQUIT
+  elseif name == 'SIGILL' then
+    return constants.SIGILL
+  elseif name == 'SIGTRAP' then
+    return constants.SIGTRAP
+  elseif name == 'SIGABRT' then
+    return constants.SIGABRT
+  elseif name == 'SIGIOT' then
+    return constants.SIGIOT
+  elseif name == 'SIGBUS' then
+    return constants.SIGBUS
+  elseif name == 'SIGFPE' then
+    return constants.SIGFPE
+  elseif name == 'SIGKILL' then
+    return constants.SIGKILL
+  elseif name == 'SIGUSR1' then
+    return constants.SIGUSR1
+  elseif name == 'SIGSEGV' then
+    return constants.SIGSEGV
+  elseif name == 'SIGUSR2' then
+    return constants.SIGUSR2
+  elseif name == 'SIGPIPE' then
+    return constants.SIGPIPE
+  elseif name == 'SIGALRM' then
+    return constants.SIGALRM
+  elseif name == 'SIGTERM' then
+    return constants.SIGTERM
+  elseif name == 'SIGCHLD' then
+    return constants.SIGCHLD
+  elseif name == 'SIGSTKFLT' then
+    return constants.SIGSTKFLT
+  elseif name == 'SIGCONT' then
+    return constants.SIGCONT
+  elseif name == 'SIGSTOP' then
+    return constants.SIGSTOP
+  elseif name == 'SIGTSTP' then
+    return constants.SIGSTSP
+  elseif name == 'SIGTTIN' then
+    return constants.SIGTTIN
+  elseif name == 'SIGTTOU' then
+    return constants.SIGTTOU
+  elseif name == 'SIGURG' then
+    return constants.SIGURG
+  elseif name == 'SIGXCPU' then
+    return constants.SIGXCPU
+  elseif name == 'SIGXFSZ' then
+    return constants.SIGXFSX
+  elseif name == 'SIGVTALRM' then
+    return constants.SIGVTALRM
+  elseif name == 'SIGPROF' then
+    return constants.SIGPROF
+  elseif name == 'SIGWINCH' then
+    return constants.SIGWINCH
+  elseif name == 'SIGIO' then
+    return constants.SIGIO
+  elseif name == 'SIGPOLL' then
+    return constants.SIGPOLL
+  elseif name == 'SIGLOST' then
+    return constants.SIGLOST
+  elseif name == 'SIGPWR' then
+    return constants.SIGPWR
+  elseif name == 'SIGSYS' then
+    return constants.SIGSYS
+  elseif name == 'SIGUNUSED' then
+    return constants.SIGUNUSED
+  end
+end
+
 --
 process.signalWraps = {}
-process.on = function(_type, listener)
-  if type(_type) ~= 'number' then
-    error('signal must be a number')
+process.on = function(self, _type, listener)
+  if _type:find('SIG') then
+    local number = signalStringToNumber(_type)
+    if number then
+      local signal = process.signalWraps[_type]
+      if not signal then
+        signal = uv.Signal:new()
+        process.signalWraps[_type] = signal
+        signal:on('signal', function()
+          self:emit(_type, number)
+        end)
+        signal:start(number)
+      end
+    end
   end
-  local signal = process.signalWraps[_type]
-  if not signal then
-    signal = uv.Signal:new()
-    process.signalWraps[_type] = signal
-  end
-  signal:on('signal', listener)
-  signal:start(_type)
+  Emitter.on(self, _type, listener)
 end
 
 process.removeListener = function(_type)
