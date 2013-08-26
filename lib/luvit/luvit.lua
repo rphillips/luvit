@@ -163,15 +163,15 @@ process.on = function(self, _type, listener)
   Emitter.on(self, _type, listener)
 end
 
-process.removeListener = function(_type)
-  if type(_type) ~= 'number' then
-    error('signal must be a number')
+process.removeListener = function(self, _type, callback)
+  if _type:find('SIG') then
+    local signal = process.signalWraps[_type]
+    if signal then
+      signal:stop()
+      process.signalWraps[_type] = nil
+    end
   end
-  local signal = process.signalWraps[_type]
-  if signal then
-    signal:stop()
-    process.signalWraps[_type] = nil
-  end
+  Emitter.removeListener(self, _type, callback)
 end
 
 -- Replace lua's stdio with luvit's
