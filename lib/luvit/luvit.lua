@@ -140,6 +140,7 @@ function signalStringToNumber(name)
   elseif name == 'SIGUNUSED' then
     return constants.SIGUNUSED
   end
+  return nil
 end
 
 --
